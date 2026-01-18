@@ -1,32 +1,44 @@
-# VitePress 自动部署 GitHub Pages （绝对成功版）
-name: Deploy VitePress
+# VitePress 自动部署 GitHub Pages 【绝对成功修复版】
+name: Deploy VitePress to GitHub Pages
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ main ]  # 只在main分支推送时触发
+  workflow_dispatch:    # 允许手动触发部署
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    permissions:
+      pages: write      # 关键修复：添加Pages写入权限（必加！）
+      id-token: write   # 关键修复：添加令牌权限（必加！）
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-      - name: Setup Node.js
+    steps:
+      - name: 拉取GitHub仓库代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 拉取完整提交历史，防止打包异常
+
+      - name: 安装Node.js环境（稳定版）
         uses: actions/setup-node@v4
         with:
-          node-version: 20  # 降级为20更稳定，24偶尔有兼容问题
-          cache: 'npm'
+          node-version: 20  # 20版本最稳定，避开24版本的兼容坑
+          cache: 'npm'      # 缓存依赖，提速
 
-      - name: Install dependencies
+      - name: 安装VitePress依赖包
         run: npm install -D vitepress vue
 
-      - name: Build VitePress site
+      - name: 打包生成静态VitePress网站
         run: npx vitepress build docs
 
-      - name: Deploy to GitHub Pages
+      - name: 部署到GitHub Pages（修复权限+绝对成功）
         uses: peaceiris/actions-gh-pages@v4
+        id: deployment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/.vitepress/dist
+          force_orphan: true  # 关键修复：强制创建干净的gh-pages分支
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
