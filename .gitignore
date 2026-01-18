@@ -1,0 +1,19 @@
+# ========== 核心忽略 - 解决本次致命报错 ==========
+# 彻底忽略node_modules文件夹，永不扫描，根治权限错误
+node_modules/
+
+# 忽略VitePress本地缓存文件夹，里面都是临时文件，无需上传
+docs/.vitepress/cache/
+
+# 忽略打包后的产物，CI会自动打包，本地无需上传
+docs/.vitepress/dist/
+
+# ========== 可选忽略 - 清理无关文件 ==========
+# Windows系统垃圾文件
+*.tmp
+*.bak
+Thumbs.db
+.DS_Store
+
+# 日志文件
+*.log
