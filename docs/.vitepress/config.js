@@ -8,8 +8,8 @@ export default {
       { text: '首页', link: '/' },
       { text: '语法示例', link: '/markdown-examples.md' },
       { text: 'API示例', link: '/api-examples.md' },
-      { text: '项目说明', link: '/项目说明.md' },
-      { text: '团队介绍', link: '/团队介绍.md' }
+      { text: '项目说明', link: '/project_introduction.md' },
+      { text: '团队介绍', link: '/team_introduction.md' }
     ]
   }
 }
