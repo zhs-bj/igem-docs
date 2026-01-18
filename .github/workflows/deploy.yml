@@ -1,0 +1,32 @@
+name: Deploy VitePress Site to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 自动安装Node.js环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: 自动安装VitePress依赖包
+        run: npm install vitepress vue -D
+
+      - name: 自动打包VitePress静态网站
+        run: npm run docs:build
+
+      - name: 自动部署到GitHub Pages生成访问链接
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/.vitepress/dist
